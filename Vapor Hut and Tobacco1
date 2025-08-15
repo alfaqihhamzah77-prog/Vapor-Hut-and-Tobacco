@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Check Your Points</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; text-align: center; }
+    input, button { padding: 10px; font-size: 16px; }
+    button { margin-top: 10px; }
+    #result { margin-top: 20px; font-size: 20px; color: green; }
+  </style>
+</head>
+<body>
+  <h2>Check Your Points</h2>
+  <input type="text" id="cardID" placeholder="Enter your Card ID">
+  <br>
+  <button onclick="checkPoints()">Show Points</button>
+  <p id="result"></p>
+
+  <script>
+    async function checkPoints() {
+      const cardID = document.getElementById("cardID").value.trim();
+      if (!cardID) {
+        document.getElementById("result").innerText = "Please enter your Card ID";
+        return;
+      }
+
+      const url = `https://script.google.com/macros/s/AKfycbw9BDBlzzpbZOWcOpv2Fgr3nroOvjWOZb7Op-jff7QtLzPE0hj-JqPTj21MC8EpoVf13w/exec?cardID=${encodeURIComponent(cardID)}&action=check`;
+      try {
+        const resp = await fetch(url);
+        const points = await resp.text();
+        document.getElementById("result").innerText = isNaN(points)
+          ? "Card not found"
+          : `Your current points: ${points}`;
+      } catch (e) {
+        document.getElementById("result").innerText = "Error occurred, please try again";
+      }
+    }
+  </script>
+</body>
+</html>
